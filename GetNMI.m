@@ -36,10 +36,18 @@ function NMI = GetNMI(A,B)
 if nargin < 2
     error('One of the two inputs is missing !!!')
 end
+
+% 重映射整数值，确保真实标签的数值是连续整数
+[uniqueValues, ~, ~] = unique(A);
 % ASSURE A; B INTEGERS!        
 N  = numel(A);
-Ca = max(A);
-Cb = max(B);
+Ca = numel(unique(A));
+mappingTable = containers.Map(uniqueValues, 1:Ca);
+% 重新映射原始向量 A
+for i = 1:length(A)
+    A(i) = mappingTable(A(i));
+end
+Cb = numel(unique(A));
 N1 = zeros(Ca*Cb,1);
 D1 = zeros(Ca,1);
 D2 = zeros(Cb,1);
